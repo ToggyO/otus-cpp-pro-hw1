@@ -16,7 +16,7 @@ jobs:
 
       - run: sudo apt-get update && sudo apt-get install libboost-test-dev -y
 
-      - run: cmake . -DPATCH_VERSION=${{ github.run_number }} -DWITH_BOOST_TEST=ON
+      - run: cmake -B ./build -DPATCH_VERSION=${{ github.run_number }} -DWITH_BOOST_TEST=ON
 
       - run: cmake --build ./build
 
