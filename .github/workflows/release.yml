@@ -14,15 +14,19 @@ jobs:
         with:
           submodules: true
 
-      - run: sudo apt-get update && sudo apt-get install libboost-test-dev -y
+      - name: Install Boost
+        run: sudo apt-get update && sudo apt-get install libboost-test-dev -y && sudo apt-get install libgtest-dev
 
-      - run: cmake . -DPATCH_VERSION=${{ github.run_number }} -DWITH_BOOST_TEST=ON
+      - name: Install GTest
+        run: sudo apt-get install libgtest-dev && cd /usr/src/gtest && sudo cmake CMakeLists.txt && sudo make && sudo cp lib/*.a /usr/lib && sudo ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a && sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
 
-      - run: cmake --build .
+      - run: cmake -B ./build -DPATCH_VERSION=${{ github.run_number }} -DWITH_BOOST_TEST=ON -DWITH_GTEST=ON
 
-      - run: cmake --build . --target test
+      - run: cmake --build ./build
 
-      - run: cmake --build . --target package
+      - run: cmake --build ./build --target test
+
+      - run: cmake --build ./build --target package
 
       - name: Create Release
         id: create_release
@@ -42,6 +46,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./helloworld-0.0.${{ github.run_number }}-Linux.deb
+          asset_path: ./build/helloworld-0.0.${{ github.run_number }}-Linux.deb
           asset_name: helloworld-0.0.${{ github.run_number }}-Linux.deb
           asset_content_type: application/vnd.debian.binary-package
