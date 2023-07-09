@@ -53,7 +53,7 @@ if(WITH_GTEST)
         CXX_STANDARD 14
         CXX_STANDARD_REQUIRED ON
     )
-
+    add_subdirectory(googletest)
     target_link_libraries(test_version_gtest PUBLIC
         gtest
         gtest_main
