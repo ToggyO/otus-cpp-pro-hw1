@@ -12,9 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          submodules: recursive
+          submodules: true
 
-      - run: sudo apt-get update && sudo apt-get install libboost-test-dev -y
+      - name: Install Boost
+        run: sudo apt-get update && sudo apt-get install libboost-test-dev -y && sudo apt-get install libgtest-dev
+
+      - name: Install GTest
+        run: sudo apt-get install libgtest-dev && cd /usr/src/gtest && sudo cmake CMakeLists.txt && sudo make && sudo cp lib/*.a /usr/lib && sudo ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a && sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
 
       - run: cmake -B ./build -DPATCH_VERSION=${{ github.run_number }} -DWITH_BOOST_TEST=ON -DWITH_GTEST=ON
 

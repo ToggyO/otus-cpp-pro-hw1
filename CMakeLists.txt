@@ -47,16 +47,17 @@ if(WITH_BOOST_TEST)
 endif()
 
 if(WITH_GTEST)
+    find_package(GTest REQUIRED)
     add_executable(test_version_gtest test_version_gtest.cpp)
 
     set_target_properties(test_version_gtest PROPERTIES
         CXX_STANDARD 14
         CXX_STANDARD_REQUIRED ON
     )
-    add_subdirectory(googletest)
+
     target_link_libraries(test_version_gtest PUBLIC
-        gtest
-        gtest_main
+        GTest::gtest
+        GTest::gtest_main
         helloworld
     )
 endif()
